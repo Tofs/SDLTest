@@ -38,11 +38,17 @@ int init()
 struct Possition {
   int x;
   int y;
-} ;
+};
+
+struct RenderObject {
+  int sizeX;
+  int sizeY;
+};
 
 struct Object {
   struct Possition pos;
   struct Possition target;
+  struct RenderObject render;
 };
 
 
@@ -53,6 +59,8 @@ void mainLoop()
   test.pos.y = 0;
   test.target.x = 100;
   test.target.y = 200;
+  test.render.sizeX = 10;
+  test.render.sizeY = 10;
   int run = 1;
   while (run)
   {
@@ -77,6 +85,17 @@ void mainLoop()
 
     struct Object renderObject = test;
 
+
+    // Render
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    SDL_Rect rect;
+    rect.x = renderObject.pos.x-renderObject.render.sizeX/2;
+    rect.y = renderObject.pos.y-renderObject.render.sizeY/2;
+    rect.w = renderObject.render.sizeX;
+    rect.h = renderObject.render.sizeY;
+    SDL_RenderDrawRect(renderer, &rect);
+
+
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderDrawLine(renderer,
                        renderObject.pos.x,
@@ -84,7 +103,12 @@ void mainLoop()
                        renderObject.target.x,
                        renderObject.target.y);
                        
+
     SDL_RenderPresent(renderer);
+
+    // Update possition
+    
+
     SDL_Delay(1000/60);
   }
 }
