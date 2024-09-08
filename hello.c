@@ -51,16 +51,46 @@ struct Object {
   struct RenderObject render;
 };
 
+struct Object objects[100];
+
+void Render()
+{
+  struct Object renderObject = objects[0];
+ 
+  SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+  SDL_Rect rect;
+  rect.x = renderObject.pos.x-renderObject.render.sizeX/2;
+  rect.y = renderObject.pos.y-renderObject.render.sizeY/2;
+  rect.w = renderObject.render.sizeX;
+  rect.h = renderObject.render.sizeY;
+  SDL_RenderDrawRect(renderer, &rect);
+
+
+  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+  SDL_RenderDrawLine(renderer,
+                     renderObject.pos.x,
+                     renderObject.pos.y,
+                     renderObject.target.x,
+                     renderObject.target.y);
+
+
+  SDL_RenderPresent(renderer);
+}
+
+void Update()
+{
+  struct Object* renderObject = &objects[0];
+  renderObject->pos.x++;
+}
 
 void mainLoop()
 {
-  struct Object test;
-  test.pos.x = 0;
-  test.pos.y = 0;
-  test.target.x = 100;
-  test.target.y = 200;
-  test.render.sizeX = 10;
-  test.render.sizeY = 10;
+  objects[0].pos.x = 0;
+  objects[0].pos.y = 0;
+  objects[0].target.x = 100;
+  objects[0].target.y = 200;
+  objects[0].render.sizeX = 10;
+  objects[0].render.sizeY = 10;
   int run = 1;
   while (run)
   {
@@ -83,30 +113,11 @@ void mainLoop()
       }
     }
 
-    struct Object renderObject = test;
-
-
     // Render
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-    SDL_Rect rect;
-    rect.x = renderObject.pos.x-renderObject.render.sizeX/2;
-    rect.y = renderObject.pos.y-renderObject.render.sizeY/2;
-    rect.w = renderObject.render.sizeX;
-    rect.h = renderObject.render.sizeY;
-    SDL_RenderDrawRect(renderer, &rect);
-
-
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderDrawLine(renderer,
-                       renderObject.pos.x,
-                       renderObject.pos.y,
-                       renderObject.target.x,
-                       renderObject.target.y);
-                       
-
-    SDL_RenderPresent(renderer);
+    Render();
 
     // Update possition
+    Update();
     
 
     SDL_Delay(1000/60);
@@ -120,13 +131,17 @@ void shutdown()
   SDL_Quit();
 }
 
-int WinMain(int argc, char* argv[]) 
+int main(int argc, char* argv[])
 {
   init();
   mainLoop();
   shutdown();
 
+  
+  return 0;
+}
 
-
-  return 0; 
+int WinMain(int argc, char* argv[]) 
+{
+  return main(argc, argv);
 }
