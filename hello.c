@@ -1,8 +1,11 @@
 #include "stdio.h"
 #include "SDL.h"
+#include <stdlib.h>
 
 SDL_Window* window;
 SDL_Renderer* renderer;
+int windowSizeX = 640;
+int windowSizeY = 480;
 
 int init()
 {
@@ -14,7 +17,7 @@ int init()
     printf("SDL started\n");
   }
 
-  window = SDL_CreateWindow("Hello SDL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, 0);
+  window = SDL_CreateWindow("Hello SDL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowSizeX, windowSizeY, 0);
   if (window == NULL) {
     printf("SDL_CreateWindow Error: %s\n", SDL_GetError());
     return 1;
@@ -53,8 +56,45 @@ struct Object {
 
 struct Object objects[100];
 
+void DrawCheckerBoard()
+{
+    int const size = 8;
+    int dark = 0;
+    SDL_Rect rect;
+    int checkerSize = windowSizeX;
+    if (checkerSize > windowSizeY)
+    {
+        checkerSize = windowSizeY;
+    }
+    checkerSize /= size;
+
+    for (int x = 0; x < size; x++)
+    {
+        for (int y = 0; y < size; y++)
+        {
+            if ((x + y) % 2 == 0)
+            {
+                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            }
+            else
+            {
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+            }
+
+            rect.x = checkerSize * x;
+            rect.y = checkerSize * y;
+            rect.w = checkerSize;
+            rect.h = checkerSize;
+
+            SDL_RenderFillRect(renderer, &rect);
+        }
+    }
+}
+
 void Render()
 {
+
+    DrawCheckerBoard();
   struct Object renderObject = objects[0];
  
   SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
@@ -82,6 +122,7 @@ void Update()
   struct Object* renderObject = &objects[0];
   renderObject->pos.x++;
 }
+
 
 void mainLoop()
 {
