@@ -95,94 +95,93 @@ void Render()
 {
 
     DrawCheckerBoard();
-  struct Object renderObject = objects[0];
- 
-  SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-  SDL_Rect rect;
-  rect.x = renderObject.pos.x-renderObject.render.sizeX/2;
-  rect.y = renderObject.pos.y-renderObject.render.sizeY/2;
-  rect.w = renderObject.render.sizeX;
-  rect.h = renderObject.render.sizeY;
-  SDL_RenderDrawRect(renderer, &rect);
+    struct Object renderObject = objects[0];
+
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    SDL_Rect rect;
+    rect.x = renderObject.pos.x-renderObject.render.sizeX/2;
+    rect.y = renderObject.pos.y-renderObject.render.sizeY/2;
+    rect.w = renderObject.render.sizeX;
+    rect.h = renderObject.render.sizeY;
+    SDL_RenderDrawRect(renderer, &rect);
 
 
-  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-  SDL_RenderDrawLine(renderer,
-                     renderObject.pos.x,
-                     renderObject.pos.y,
-                     renderObject.target.x,
-                     renderObject.target.y);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderDrawLine(renderer,
+                       renderObject.pos.x,
+                       renderObject.pos.y,
+                       renderObject.target.x,
+                       renderObject.target.y);
 
 
-  SDL_RenderPresent(renderer);
+    SDL_RenderPresent(renderer);
 }
 
 void Update()
 {
-  struct Object* renderObject = &objects[0];
-  renderObject->pos.x++;
+    struct Object* renderObject = &objects[0];
+    renderObject->pos.x++;
 }
 
 
 void mainLoop()
 {
-  objects[0].pos.x = 0;
-  objects[0].pos.y = 0;
-  objects[0].target.x = 100;
-  objects[0].target.y = 200;
-  objects[0].render.sizeX = 10;
-  objects[0].render.sizeY = 10;
-  int run = 1;
-  while (run)
-  {
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderClear(renderer);
-
-
-    SDL_Event event;
-    while (SDL_PollEvent(&event))
+    objects[0].pos.x = 0;
+    objects[0].pos.y = 0;
+    objects[0].target.x = 100;
+    objects[0].target.y = 200;
+    objects[0].render.sizeX = 10;
+    objects[0].render.sizeY = 10;
+    int run = 1;
+    while (run)
     {
-      switch (event.type)
-      {
-        case SDL_QUIT:
-          printf("Quiting\n");
-          run = 0;
-          break;
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_RenderClear(renderer);
 
-        default:
-          break;
-      }
+
+        SDL_Event event;
+        while (SDL_PollEvent(&event))
+        {
+            switch (event.type)
+            {
+                case SDL_QUIT:
+                    printf("Quiting\n");
+                    run = 0;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        // Render
+        Render();
+
+        // Update possition
+        Update();
+
+
+        SDL_Delay(1000/60);
     }
-
-    // Render
-    Render();
-
-    // Update possition
-    Update();
-    
-
-    SDL_Delay(1000/60);
-  }
 }
 
 void shutdown()
 {
-  SDL_DestroyRenderer(renderer);
-  SDL_DestroyWindow(window);
-  SDL_Quit();
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 }
 
 int main(int argc, char* argv[])
 {
-  init();
-  mainLoop();
-  shutdown();
-
+    init();
+    mainLoop();
+    shutdown();
   
-  return 0;
+    return 0;
 }
 
 int WinMain(int argc, char* argv[]) 
 {
-  return main(argc, argv);
+    return main(argc, argv);
 }
