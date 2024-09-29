@@ -2,6 +2,7 @@
 #include "SDL.h"
 #include <stdlib.h>
 #include "util.h"
+#include "UserInput.h"
 
 SDL_Window* window;
 SDL_Renderer* renderer;
@@ -128,34 +129,20 @@ void mainLoop()
     objects[0].target.y = 200;
     objects[0].render.sizeX = 10;
     objects[0].render.sizeY = 10;
-    int run = 1;
-    while (run)
+    gameStatus.run = 1;
+    while (gameStatus.run)
     {
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderClear(renderer);
 
 
-        SDL_Event event;
-        while (SDL_PollEvent(&event))
-        {
-            switch (event.type)
-            {
-                case SDL_QUIT:
-                    printf("Quiting\n");
-                    run = 0;
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
-        // Render
-        Render();
+        UpdateUserInput();
 
         // Update possition
         Update();
 
+        // Render
+        Render();
 
         SDL_Delay(1000/60);
     }
