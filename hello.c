@@ -1,6 +1,7 @@
 #include "stdio.h"
 #include "SDL.h"
 #include <stdlib.h>
+#include "util.h"
 
 SDL_Window* window;
 SDL_Renderer* renderer;
@@ -61,12 +62,7 @@ void DrawCheckerBoard()
     int const size = 8;
     int dark = 0;
     SDL_Rect rect;
-    int checkerSize = windowSizeX;
-    if (checkerSize > windowSizeY)
-    {
-        checkerSize = windowSizeY;
-    }
-    checkerSize /= size;
+    int checkerSize = MIN(windowSizeX, windowSizeY) / size;
 
     for (int x = 0; x < size; x++)
     {
